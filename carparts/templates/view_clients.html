@@ -1,34 +1,44 @@
-{% extends "base.html" %}
-{% block content %}
-<h2>All Clients</h2>
-<a href="/add_client"><button>Add New Client</button></a>
-<table>
-    <thead>
-        <tr>
-            <th><a href="?sort={{ 'desc' if sort_order == 'asc' else 'asc' }}">Name</a></th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>City</th>
-            <th>Address</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for client in clients %}
-        <tr>
-            <td>{{ client.name }}</td>
-            <td>{{ client.email }}</td>
-            <td>{{ client.phone }}</td>
-            <td>{{ client.city }}</td>
-            <td>{{ client.address }}</td>
-            <td>
-                <a href="/edit_client/{{ client.id }}"><button>Edit</button></a>
-                <form action="/delete_client/{{ client.id }}" method="POST" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клиенты</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts</h1>
+        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+    </nav>
+    <div class="max-w-4xl mx-auto mt-10">
+        <h2 class="text-3xl font-semibold mb-6">Список клиентов</h2>
+        <a href="/add_client" class="bg-black text-white p-3 rounded-lg">Добавить клиента</a>
+        <table class="w-full mt-6 bg-white shadow-md rounded-lg">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-3">Имя</th>
+                    <th class="p-3">Email</th>
+                    <th class="p-3">Телефон</th>
+                    <th class="p-3">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr class="border-t">
+                    <td class="p-3">{{ client.name }}</td>
+                    <td class="p-3">{{ client.email }}</td>
+                    <td class="p-3">{{ client.phone }}</td>
+                    <td class="p-3">
+                        <a href="/edit_client/{{ client.id }}" class="text-blue-500">Редактировать</a>
+                        <form action="/delete_client/{{ client.id }}" method="POST" class="inline">
+                            <button type="submit" class="text-red-500">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

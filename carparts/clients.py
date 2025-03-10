@@ -5,10 +5,10 @@ from datetime import datetime
 
 def view_clients(app):
     @app.route('/view_clients')
-    def view_clients():
+    def _view_clients():
         if 'id' not in session:
             return redirect(url_for('login'))
-        sort_order = request.args.get('sort', 'asc')  # Default to ascending order
+        sort_order = request.args.get('sort', 'asc')
         if sort_order == 'asc':
             clients = Client.query.order_by(Client.name.asc()).all()
         else:
@@ -18,7 +18,7 @@ def view_clients(app):
 
 def add_client(app):
     @app.route('/add_client', methods=['GET', 'POST'])
-    def add_client():
+    def _add_client():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -35,7 +35,7 @@ def add_client(app):
                 phone=phone,
                 city=city,
                 address=address,
-                created_at=datetime.utcnow()
+                created_at=datetime.now()
             )
 
             try:
@@ -52,7 +52,7 @@ def add_client(app):
 
 def edit_client(app):
     @app.route('/edit_client/<int:client_id>', methods=['GET', 'POST'])
-    def edit_client(client_id):
+    def _edit_client(client_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -78,7 +78,7 @@ def edit_client(app):
 
 def delete_client(app):
     @app.route('/delete_client/<int:client_id>', methods=['POST'])
-    def delete_client(client_id):
+    def _delete_client(client_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

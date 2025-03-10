@@ -4,6 +4,14 @@ import logging
 from logging.handlers import RotatingFileHandler
 from clients import view_clients, add_client, edit_client, delete_client
 from users import login, logout, register, view_users
+from inventory_logs import view_inventory_logs, add_inventory_log, edit_inventory_log, delete_inventory_log
+from order_items import view_order_items, add_order_item, edit_order_item, delete_order_item
+from orders import view_orders, edit_order, add_order, delete_order
+from products import view_products, add_product, edit_product, delete_product
+from suppliers import view_suppliers, add_supplier, edit_supplier, delete_supplier
+from warehouse_section import (view_warehouse_sections, add_warehouse_section, edit_warehouse_section,
+                               delete_warehouse_section)
+from warehouses import view_warehouses, add_warehouse, edit_warehouse, delete_warehouse
 
 
 app = Flask(__name__)
@@ -31,6 +39,41 @@ view_clients(app)
 add_client(app)
 edit_client(app)
 delete_client(app)
+
+view_inventory_logs(app)
+add_inventory_log(app)
+edit_inventory_log(app)
+delete_inventory_log(app)
+
+view_order_items(app)
+add_order_item(app)
+edit_order_item(app)
+delete_order_item(app)
+
+view_orders(app)
+add_order(app)
+edit_order(app)
+delete_order(app)
+
+view_products(app)
+add_product(app)
+edit_product(app)
+delete_product(app)
+
+view_suppliers(app)
+add_supplier(app)
+edit_supplier(app)
+delete_supplier(app)
+
+view_warehouse_sections(app)
+add_warehouse_section(app)
+edit_warehouse_section(app)
+delete_warehouse_section(app)
+
+view_warehouses(app)
+add_warehouse(app)
+edit_warehouse(app)
+delete_warehouse(app)
 
 
 @app.route('/')

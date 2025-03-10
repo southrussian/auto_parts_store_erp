@@ -5,7 +5,7 @@ from datetime import datetime
 
 def view_products(app):
     @app.route('/view_products/<int:section_id>')
-    def view_products(section_id):
+    def _view_products(section_id):
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')  # Default to ascending order
@@ -18,7 +18,7 @@ def view_products(app):
 
 def add_product(app):
     @app.route('/add_product/<int:section_id>', methods=['GET', 'POST'])
-    def add_product(section_id):
+    def _add_product(section_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
