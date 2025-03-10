@@ -9,11 +9,12 @@ from users import login, logout, register, view_users
 from inventory_logs import view_inventory_logs, add_inventory_log, edit_inventory_log, delete_inventory_log
 from order_items import view_order_items, add_order_item, edit_order_item, delete_order_item
 from orders import view_orders, edit_order, add_order, delete_order
-from products import view_products, add_product, edit_product, delete_product
+from products import view_products, add_product, edit_product, delete_product, search_products
 from suppliers import view_suppliers, add_supplier, edit_supplier, delete_supplier
 from warehouse_section import (view_warehouse_sections, add_warehouse_section, edit_warehouse_section,
                                delete_warehouse_section)
 from warehouses import view_warehouses, add_warehouse, edit_warehouse, delete_warehouse
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -32,6 +33,7 @@ app.logger.info("Приложение Flask запущено.")
 
 
 db.init_app(app)
+migrate = Migrate(app, db)
 
 login(app)
 logout(app)
@@ -62,6 +64,7 @@ view_products(app)
 add_product(app)
 edit_product(app)
 delete_product(app)
+search_products(app)
 
 view_suppliers(app)
 add_supplier(app)

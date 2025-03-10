@@ -18,7 +18,7 @@ def view_inventory_logs(app):
 
 def add_inventory_log(app):
     @app.route('/add_inventory_log/<int:product_id>', methods=['GET', 'POST'])
-    def _add_inventory_log(product_id):
+    def _add_inventory_log(product_id=None):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -26,7 +26,7 @@ def add_inventory_log(app):
             warehouse_id = request.form['warehouse_id']
             section_id = request.form['section_id']
             change_type = request.form['change_type']
-            quantity = request.form['quantity']
+            quantity = int(request.form['quantity'])
             description = request.form['description']
 
             log = InventoryLog(
@@ -36,14 +36,14 @@ def add_inventory_log(app):
                 change_type=change_type,
                 quantity=quantity,
                 description=description,
-                created_at=datetime.utcnow()
+                created_at=datetime.now()
             )
 
             try:
                 db.session.add(log)
                 db.session.commit()
                 flash("Inventory log added successfully!", "success")
-                return redirect(url_for('view_inventory_logs', product_id=product_id))
+                return redirect(url_for('_view_inventory_logs', product_id=product_id))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -63,13 +63,13 @@ def edit_inventory_log(app):
             log.warehouse_id = request.form['warehouse_id']
             log.section_id = request.form['section_id']
             log.change_type = request.form['change_type']
-            log.quantity = request.form['quantity']
+            log.quantity = int(request.form['quantity'])
             log.description = request.form['description']
 
             try:
                 db.session.commit()
                 flash("Inventory log updated successfully!", "success")
-                return redirect(url_for('view_inventory_logs', product_id=log.product_id))
+                return redirect(url_for('_view_inventory_logs', product_id=log.product_id))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -92,4 +92,4 @@ def delete_inventory_log(app):
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {e}", "danger")
-        return redirect(url_for('view_inventory_logs', product_id=product_id))
+        return redirect(url_for('_view_inventory_logs', product_id=product_id))

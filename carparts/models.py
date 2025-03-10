@@ -13,7 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(256), nullable=False)
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)  # Исправлено имя атрибута
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -24,7 +24,7 @@ class Warehouse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     sections = db.relationship('WarehouseSection', backref='warehouse', lazy=True)
 
 
@@ -34,7 +34,7 @@ class WarehouseSection(db.Model):
     warehouse_id = db.Column(db.Integer, db.ForeignKey('warehouses.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     products = db.relationship('Product', backref='section', lazy=True)
 
 
@@ -45,20 +45,21 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=True)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'), nullable=True)  # Исправлено имя таблицы
+    created_at = db.Column(db.DateTime, default=datetime.now())
+    supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'), nullable=True)
     warehouse_section_id = db.Column(db.Integer, db.ForeignKey('warehouse_sections.id'), nullable=False)
+    embedding = db.Column(db.PickleType) # новое поле
 
 
 class InventoryLog(db.Model):
     __tablename__ = 'logs'
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)  # Исправлено имя таблицы
-    warehouse_id = db.Column(db.Integer, db.ForeignKey('warehouses.id'), nullable=False)  # Исправлено имя таблицы
-    section_id = db.Column(db.Integer, db.ForeignKey('warehouse_sections.id'), nullable=False)  # Исправлено имя таблицы
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    warehouse_id = db.Column(db.Integer, db.ForeignKey('warehouses.id'), nullable=False)
+    section_id = db.Column(db.Integer, db.ForeignKey('warehouse_sections.id'), nullable=False)
     change_type = db.Column(db.String(50), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     description = db.Column(db.Text, nullable=True)
 
 
@@ -70,7 +71,7 @@ class Client(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 
 class Order(db.Model):
@@ -80,7 +81,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(50), nullable=False, default='Pending')
     total_price = db.Column(db.Float, nullable=False, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
 
 
@@ -98,6 +99,6 @@ class Supplier(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     contact_info = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     city = db.Column(db.String(50), nullable=False)
     products = db.relationship('Product', backref='supplier', lazy=True)

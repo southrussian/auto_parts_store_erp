@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интеллектуальный поиск</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts</h1>
+        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+    </nav>
+
+    <div class="max-w-4xl mx-auto mt-10">
+        <h2 class="text-3xl font-semibold mb-6">Интеллектуальный поиск</h2>
+
+        <form method="POST" class="mb-8 bg-white p-6 rounded-lg shadow-md">
+            <div class="flex gap-4">
+                <input type="text" name="search_query"
+                       placeholder="Ищите детали или описание..."
+                       class="flex-1 p-3 border rounded-lg">
+                <button type="submit"
+                        class="bg-black text-white px-6 py-3 rounded-lg">
+                    Найти
+                </button>
+            </div>
+        </form>
+
+        {% if results %}
+        <div class="bg-white shadow-md rounded-lg">
+            {% for product in results %}
+            <div class="border-t p-4 hover:bg-gray-50">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold">{{ product.name }}</h3>
+                        <p class="text-gray-600">{{ product.description }}</p>
+                        <div class="mt-2">
+                            <span class="text-lg font-bold">{{ product.price }} ₽</span>
+                            <span class="ml-4 text-gray-500">В наличии: {{ product.stock }}</span>
+                        </div>
+                    </div>
+                    <a href="/edit_product/{{ product.id }}"
+                       class="text-blue-500 hover:text-blue-700">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -42,7 +42,7 @@ def add_client(app):
                 db.session.add(client)
                 db.session.commit()
                 flash("Client added successfully!", "success")
-                return redirect(url_for('view_clients'))
+                return redirect(url_for('_view_clients'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -68,7 +68,7 @@ def edit_client(app):
             try:
                 db.session.commit()
                 flash("Client updated successfully!", "success")
-                return redirect(url_for('view_clients'))
+                return redirect(url_for('_view_clients'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -90,4 +90,4 @@ def delete_client(app):
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {e}", "danger")
-        return redirect(url_for('view_clients'))
+        return redirect(url_for('_view_clients'))

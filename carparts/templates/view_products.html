@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продукты</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts</h1>
+        <a href="/search_products" class="text-gray-600 hover:text-black">Поиск</a>
+        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+    </nav>
+    <div class="max-w-4xl mx-auto mt-10">
+        <h2 class="text-3xl font-semibold mb-6">Список продуктов</h2>
+        <a href="/add_product" class="bg-black text-white p-3 rounded-lg">Добавить продукт</a>
+        <table class="w-full mt-6 bg-white shadow-md rounded-lg">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-3">Название</th>
+                    <th class="p-3">Описание</th>
+                    <th class="p-3">Цена</th>
+                    <th class="p-3">Количество</th>
+                    <th class="p-3">Поставщик</th>
+                    <th class="p-3">Секция склада</th>
+                    <th class="p-3">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="border-t">
+                    <td class="p-3">{{ product.name }}</td>
+                    <td class="p-3">{{ product.description }}</td>
+                    <td class="p-3">{{ product.price }}</td>
+                    <td class="p-3">{{ product.stock }}</td>
+                    <td class="p-3">{{ product.supplier_id if product.supplier_id else "Нет" }}</td>
+                    <td class="p-3">{{ product.warehouse_section_id }}</td>
+                    <td class="p-3">
+                        <a href="/edit_product/{{ product.id }}" class="text-blue-500">Редактировать</a>
+                        <form action="/delete_product/{{ product.id }}" method="POST" class="inline">
+                            <button type="submit" class="text-red-500">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
