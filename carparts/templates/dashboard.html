@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'SF Pro Display', sans-serif;
+            background-color: #f4f4f5;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Хедер */
+        .navbar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .logout {
+            background-color: #007aff;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .logout:hover {
+            background-color: #0051a8;
+        }
+
+        /* Контейнер для контента */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Блок с кнопками */
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .btn-dashboard {
+            background-color: #007aff;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 30px;
+            font-size: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-dashboard:hover {
+            background-color: #0051a8;
+            transform: translateY(-4px);
+        }
+
+        .btn-dashboard:active {
+            transform: translateY(2px);
+        }
+
+        /* Медиазапросы для мобильных устройств */
+        @media (max-width: 768px) {
+            .dashboard-links {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .btn-dashboard {
+                padding: 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Хедер -->
+    <div class="navbar">
+        <button class="logout" onclick="window.location.href='/logout'">Выйти</button>
+    </div>
+
+    <!-- Контент -->
+    <div class="container">
+        <div class="dashboard-links">
+            <a href="/view_users">
+                <div class="btn-dashboard">Пользователи</div>
+            </a>
+            <a href="/view_clients">
+                <div class="btn-dashboard">Клиенты</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

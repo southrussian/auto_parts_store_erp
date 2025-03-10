@@ -33,7 +33,7 @@ def login(app):
 
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
-                session['user_id'] = user.user_id
+                session['id'] = user.id
                 flash('Вход выполнен успешно!', 'success')
                 return redirect(url_for('dashboard'))
             else:
