@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, session
 from models import Warehouse, db
 from datetime import datetime
 
+
 def view_warehouses(app):
     @app.route('/view_warehouses')
     def view_warehouses():
@@ -13,6 +14,7 @@ def view_warehouses(app):
         else:
             warehouses = Warehouse.query.order_by(Warehouse.name.desc()).all()
         return render_template('view_warehouses.html', warehouses=warehouses, sort_order=sort_order)
+
 
 def add_warehouse(app):
     @app.route('/add_warehouse', methods=['GET', 'POST'])
@@ -41,6 +43,7 @@ def add_warehouse(app):
 
         return render_template('add_warehouse.html')
 
+
 def edit_warehouse(app):
     @app.route('/edit_warehouse/<int:warehouse_id>', methods=['GET', 'POST'])
     def edit_warehouse(warehouse_id):
@@ -62,6 +65,7 @@ def edit_warehouse(app):
                 flash(f"An error occurred: {e}", "danger")
 
         return render_template('edit_warehouse.html', warehouse=warehouse)
+
 
 def delete_warehouse(app):
     @app.route('/delete_warehouse/<int:warehouse_id>', methods=['POST'])
