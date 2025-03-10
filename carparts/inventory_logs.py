@@ -5,7 +5,7 @@ from datetime import datetime
 
 def view_inventory_logs(app):
     @app.route('/view_inventory_logs/<int:product_id>')
-    def view_inventory_logs(product_id):
+    def _view_inventory_logs(product_id):
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -18,7 +18,7 @@ def view_inventory_logs(app):
 
 def add_inventory_log(app):
     @app.route('/add_inventory_log/<int:product_id>', methods=['GET', 'POST'])
-    def add_inventory_log(product_id):
+    def _add_inventory_log(product_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -53,7 +53,7 @@ def add_inventory_log(app):
 
 def edit_inventory_log(app):
     @app.route('/edit_inventory_log/<int:log_id>', methods=['GET', 'POST'])
-    def edit_inventory_log(log_id):
+    def _edit_inventory_log(log_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -79,7 +79,7 @@ def edit_inventory_log(app):
 
 def delete_inventory_log(app):
     @app.route('/delete_inventory_log/<int:log_id>', methods=['POST'])
-    def delete_inventory_log(log_id):
+    def _delete_inventory_log(log_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

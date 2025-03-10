@@ -1,6 +1,8 @@
 from models import db
+import os
 from flask import Flask, render_template, redirect, url_for, flash, session
 import logging
+from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 from clients import view_clients, add_client, edit_client, delete_client
 from users import login, logout, register, view_users
@@ -13,11 +15,12 @@ from warehouse_section import (view_warehouse_sections, add_warehouse_section, e
                                delete_warehouse_section)
 from warehouses import view_warehouses, add_warehouse, edit_warehouse, delete_warehouse
 
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carparts.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'oxxxymiron'
+app.secret_key = os.getenv('SECRET_KEY')
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s - %(message)s')
 file_handler = RotatingFileHandler('carparts_app.log', maxBytes=10 * 1024 * 1024, backupCount=5)

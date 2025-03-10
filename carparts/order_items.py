@@ -4,7 +4,7 @@ from models import OrderItem, db
 
 def view_order_items(app):
     @app.route('/view_order_items/<int:order_id>')
-    def view_order_items(order_id):
+    def _view_order_items(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')  # Default to ascending order
@@ -17,7 +17,7 @@ def view_order_items(app):
 
 def add_order_item(app):
     @app.route('/add_order_item/<int:order_id>', methods=['GET', 'POST'])
-    def add_order_item(order_id):
+    def _add_order_item(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -47,7 +47,7 @@ def add_order_item(app):
 
 def edit_order_item(app):
     @app.route('/edit_order_item/<int:item_id>', methods=['GET', 'POST'])
-    def edit_order_item(item_id):
+    def _edit_order_item(item_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -71,7 +71,7 @@ def edit_order_item(app):
 
 def delete_order_item(app):
     @app.route('/delete_order_item/<int:item_id>', methods=['POST'])
-    def delete_order_item(item_id):
+    def _delete_order_item(item_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
