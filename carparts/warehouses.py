@@ -5,7 +5,7 @@ from datetime import datetime
 
 def view_warehouses(app):
     @app.route('/view_warehouses')
-    def view_warehouses():
+    def _view_warehouses():
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -18,7 +18,7 @@ def view_warehouses(app):
 
 def add_warehouse(app):
     @app.route('/add_warehouse', methods=['GET', 'POST'])
-    def add_warehouse():
+    def _add_warehouse():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -29,7 +29,7 @@ def add_warehouse(app):
             warehouse = Warehouse(
                 name=name,
                 location=location,
-                created_at=datetime.utcnow()
+                created_at=datetime.now()
             )
 
             try:
@@ -46,7 +46,7 @@ def add_warehouse(app):
 
 def edit_warehouse(app):
     @app.route('/edit_warehouse/<int:warehouse_id>', methods=['GET', 'POST'])
-    def edit_warehouse(warehouse_id):
+    def _edit_warehouse(warehouse_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -69,7 +69,7 @@ def edit_warehouse(app):
 
 def delete_warehouse(app):
     @app.route('/delete_warehouse/<int:warehouse_id>', methods=['POST'])
-    def delete_warehouse(warehouse_id):
+    def _delete_warehouse(warehouse_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

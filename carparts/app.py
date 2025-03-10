@@ -5,6 +5,7 @@ from logging.handlers import RotatingFileHandler
 from clients import view_clients, add_client, edit_client, delete_client
 from users import login, logout, register, view_users
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///carparts.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
