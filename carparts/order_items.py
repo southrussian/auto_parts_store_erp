@@ -7,7 +7,7 @@ def view_order_items(app):
     def _view_order_items(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
-        sort_order = request.args.get('sort', 'asc')  # Default to ascending order
+        sort_order = request.args.get('sort', 'asc')
         if sort_order == 'asc':
             items = OrderItem.query.filter_by(order_id=order_id).order_by(OrderItem.id.asc()).all()
         else:

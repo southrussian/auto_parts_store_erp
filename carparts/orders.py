@@ -5,10 +5,10 @@ from datetime import datetime
 
 def view_orders(app):
     @app.route('/view_orders')
-    def view_orders():
+    def _view_orders():
         if 'id' not in session:
             return redirect(url_for('login'))
-        sort_order = request.args.get('sort', 'asc')  # Default to ascending order
+        sort_order = request.args.get('sort', 'asc')
         if sort_order == 'asc':
             orders = Order.query.order_by(Order.created_at.asc()).all()
         else:
@@ -18,7 +18,7 @@ def view_orders(app):
 
 def add_order(app):
     @app.route('/add_order', methods=['GET', 'POST'])
-    def add_order():
+    def _add_order():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -33,7 +33,7 @@ def add_order(app):
                 user_id=user_id,
                 status=status,
                 total_price=total_price,
-                created_at=datetime.utcnow()
+                created_at=datetime.now()
             )
 
             try:
@@ -50,7 +50,7 @@ def add_order(app):
 
 def edit_order(app):
     @app.route('/edit_order/<int:order_id>', methods=['GET', 'POST'])
-    def edit_order(order_id):
+    def _edit_order(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -75,7 +75,7 @@ def edit_order(app):
 
 def delete_order(app):
     @app.route('/delete_order/<int:order_id>', methods=['POST'])
-    def delete_order(order_id):
+    def _delete_order(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

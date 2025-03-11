@@ -5,7 +5,7 @@ from datetime import datetime
 
 def view_suppliers(app):
     @app.route('/view_suppliers')
-    def view_suppliers():
+    def _view_suppliers():
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -18,7 +18,7 @@ def view_suppliers(app):
 
 def add_supplier(app):
     @app.route('/add_supplier', methods=['GET', 'POST'])
-    def add_supplier():
+    def _add_supplier():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -31,7 +31,7 @@ def add_supplier(app):
                 name=name,
                 contact_info=contact_info,
                 city=city,
-                created_at=datetime.utcnow()
+                created_at=datetime.now()
             )
 
             try:
@@ -48,7 +48,7 @@ def add_supplier(app):
 
 def edit_supplier(app):
     @app.route('/edit_supplier/<int:supplier_id>', methods=['GET', 'POST'])
-    def edit_supplier(supplier_id):
+    def _edit_supplier(supplier_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -72,7 +72,7 @@ def edit_supplier(app):
 
 def delete_supplier(app):
     @app.route('/delete_supplier/<int:supplier_id>', methods=['POST'])
-    def delete_supplier(supplier_id):
+    def _delete_supplier(supplier_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
