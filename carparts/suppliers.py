@@ -3,9 +3,9 @@ from models import Supplier, db
 from datetime import datetime
 
 
-def view_suppliers(app):
+def setup_suppliers_routes(app):
     @app.route('/view_suppliers')
-    def _view_suppliers():
+    def view_suppliers():
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -15,10 +15,8 @@ def view_suppliers(app):
             suppliers = Supplier.query.order_by(Supplier.name.desc()).all()
         return render_template('view_suppliers.html', suppliers=suppliers, sort_order=sort_order)
 
-
-def add_supplier(app):
     @app.route('/add_supplier', methods=['GET', 'POST'])
-    def _add_supplier():
+    def add_supplier():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -45,10 +43,8 @@ def add_supplier(app):
 
         return render_template('add_supplier.html')
 
-
-def edit_supplier(app):
     @app.route('/edit_supplier/<int:supplier_id>', methods=['GET', 'POST'])
-    def _edit_supplier(supplier_id):
+    def edit_supplier(supplier_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -69,10 +65,8 @@ def edit_supplier(app):
 
         return render_template('edit_supplier.html', supplier=supplier)
 
-
-def delete_supplier(app):
     @app.route('/delete_supplier/<int:supplier_id>', methods=['POST'])
-    def _delete_supplier(supplier_id):
+    def delete_supplier(supplier_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

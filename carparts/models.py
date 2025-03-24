@@ -47,7 +47,7 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'), nullable=True)
     warehouse_section_id = db.Column(db.Integer, db.ForeignKey('warehouse_sections.id'), nullable=False)
-    embedding = db.Column(db.PickleType) # новое поле
+    embedding = db.Column(db.PickleType)
 
 
 class InventoryLog(db.Model):

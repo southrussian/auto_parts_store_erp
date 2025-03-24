@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, session
 from models import InventoryLog, db
 
 
-def register_inventory_logs_routes(app):
+def setup_inventory_logs_routes(app):
     @app.route('/view_inventory_logs')
     def view_inventory_logs():
         """Просмотр всех журнальных записей инвентаря"""

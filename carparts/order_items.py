@@ -2,9 +2,9 @@ from flask import render_template, redirect, url_for, flash, request, session
 from models import OrderItem, db, Product
 
 
-def view_order_items(app):
+def setup_order_items_routes(app):
     @app.route('/view_order_items/<int:order_id>')
-    def _view_order_items(order_id):
+    def view_order_items(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -29,9 +29,8 @@ def view_order_items(app):
             available_products=available_products
         )
 
-def add_order_item(app):
     @app.route('/add_order_item/<int:order_id>', methods=['GET', 'POST'])
-    def _add_order_item(order_id):
+    def add_order_item(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -58,10 +57,8 @@ def add_order_item(app):
 
         return render_template('add_order_item.html', order_id=order_id)
 
-
-def edit_order_item(app):
     @app.route('/edit_order_item/<int:item_id>', methods=['GET', 'POST'])
-    def _edit_order_item(item_id):
+    def edit_order_item(item_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -82,10 +79,8 @@ def edit_order_item(app):
 
         return render_template('edit_order_item.html', item=item)
 
-
-def delete_order_item(app):
     @app.route('/delete_order_item/<int:item_id>', methods=['POST'])
-    def _delete_order_item(item_id):
+    def delete_order_item(item_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

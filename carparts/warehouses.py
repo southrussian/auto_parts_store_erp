@@ -3,9 +3,9 @@ from models import Warehouse, db
 from datetime import datetime
 
 
-def view_warehouses(app):
+def setup_warehouses_routes(app):
     @app.route('/view_warehouses')
-    def _view_warehouses():
+    def view_warehouses():
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -15,10 +15,8 @@ def view_warehouses(app):
             warehouses = Warehouse.query.order_by(Warehouse.name.desc()).all()
         return render_template('view_warehouses.html', warehouses=warehouses, sort_order=sort_order)
 
-
-def add_warehouse(app):
     @app.route('/add_warehouse', methods=['GET', 'POST'])
-    def _add_warehouse():
+    def add_warehouse():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -43,10 +41,8 @@ def add_warehouse(app):
 
         return render_template('add_warehouse.html')
 
-
-def edit_warehouse(app):
     @app.route('/edit_warehouse/<int:warehouse_id>', methods=['GET', 'POST'])
-    def _edit_warehouse(warehouse_id):
+    def edit_warehouse(warehouse_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -66,10 +62,8 @@ def edit_warehouse(app):
 
         return render_template('edit_warehouse.html', warehouse=warehouse)
 
-
-def delete_warehouse(app):
     @app.route('/delete_warehouse/<int:warehouse_id>', methods=['POST'])
-    def _delete_warehouse(warehouse_id):
+    def delete_warehouse(warehouse_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

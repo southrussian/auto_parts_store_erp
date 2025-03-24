@@ -4,7 +4,7 @@ from datetime import datetime
 from search_utils import generate_embedding
 
 
-def view_products(app):
+def setup_products_routes(app):
     @app.route('/view_products')
     def _view_products():
         if 'id' not in session:
@@ -28,10 +28,8 @@ def view_products(app):
             active_orders=active_orders
         )
 
-
-def add_product(app):
     @app.route('/add_product', methods=['GET', 'POST'])
-    def _add_product():
+    def add_product():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -65,10 +63,8 @@ def add_product(app):
 
         return render_template('add_product.html')
 
-
-def edit_product(app):
     @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
-    def _edit_product(product_id):
+    def edit_product(product_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -93,10 +89,8 @@ def edit_product(app):
 
         return render_template('edit_product.html', product=product)
 
-
-def delete_product(app):
     @app.route('/delete_product/<int:product_id>', methods=['POST'])
-    def _delete_product(product_id):
+    def delete_product(product_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -110,10 +104,8 @@ def delete_product(app):
             flash(f"An error occurred: {e}", "danger")
         return redirect(url_for('_view_products'))
 
-
-def search_products(app):
     @app.route('/search_products', methods=['GET', 'POST'])
-    def _search_products():
+    def search_products():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -126,10 +118,8 @@ def search_products(app):
 
         return render_template('search_products.html', results=results)
 
-
-def add_to_order(app):
     @app.route('/add_to_order', methods=['POST'])
-    def _add_to_order():
+    def add_to_order():
         if 'id' not in session:
             return redirect(url_for('login'))
 

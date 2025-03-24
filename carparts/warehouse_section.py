@@ -3,7 +3,7 @@ from models import WarehouseSection, db
 from datetime import datetime
 
 
-def view_warehouse_sections(app):
+def setup_warehouse_sections_routes(app):
     @app.route('/view_warehouse_sections/<int:warehouse_id>')
     def _view_warehouse_sections(warehouse_id):
         if 'id' not in session:
@@ -18,8 +18,6 @@ def view_warehouse_sections(app):
         return render_template('view_warehouse_sections.html', sections=sections,
                                sort_order=sort_order, warehouse_id=warehouse_id)
 
-
-def add_warehouse_section(app):
     @app.route('/add_warehouse_section/<int:warehouse_id>', methods=['GET', 'POST'])
     def _add_warehouse_section(warehouse_id):
         if 'id' not in session:
@@ -47,8 +45,6 @@ def add_warehouse_section(app):
 
         return render_template('add_warehouse_section.html', warehouse_id=warehouse_id)
 
-
-def edit_warehouse_section(app):
     @app.route('/edit_warehouse_section/<int:section_id>', methods=['GET', 'POST'])
     def _edit_warehouse_section(section_id):
         if 'id' not in session:
@@ -70,8 +66,6 @@ def edit_warehouse_section(app):
 
         return render_template('edit_warehouse_section.html', section=section)
 
-
-def delete_warehouse_section(app):
     @app.route('/delete_warehouse_section/<int:section_id>', methods=['POST'])
     def _delete_warehouse_section(section_id):
         if 'id' not in session:

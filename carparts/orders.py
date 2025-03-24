@@ -3,9 +3,9 @@ from models import *
 from datetime import datetime
 
 
-def view_orders(app):
+def setup_orders_routes(app):
     @app.route('/view_orders')
-    def _view_orders():
+    def view_orders():
         if 'id' not in session:
             return redirect(url_for('login'))
         sort_order = request.args.get('sort', 'asc')
@@ -15,8 +15,6 @@ def view_orders(app):
             orders = Order.query.order_by(Order.created_at.desc()).all()
         return render_template('view_orders.html', orders=orders, sort_order=sort_order)
 
-
-def add_order(app):
     @app.route('/add_order', methods=['GET', 'POST'])
     def _add_order():
         if 'id' not in session:
@@ -50,8 +48,6 @@ def add_order(app):
 
         return render_template('add_order.html', clients=clients, users=users)
 
-
-def edit_order(app):
     @app.route('/edit_order/<int:order_id>', methods=['GET', 'POST'])
     def _edit_order(order_id):
         if 'id' not in session:
@@ -114,8 +110,6 @@ def edit_order(app):
             statuses=['Pending', 'Paid', 'Completed']
         )
 
-
-def delete_order(app):
     @app.route('/delete_order/<int:order_id>', methods=['POST'])
     def _delete_order(order_id):
         if 'id' not in session:
