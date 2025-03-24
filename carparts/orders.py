@@ -16,7 +16,7 @@ def setup_orders_routes(app):
         return render_template('view_orders.html', orders=orders, sort_order=sort_order)
 
     @app.route('/add_order', methods=['GET', 'POST'])
-    def _add_order():
+    def add_order():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -49,7 +49,7 @@ def setup_orders_routes(app):
         return render_template('add_order.html', clients=clients, users=users)
 
     @app.route('/edit_order/<int:order_id>', methods=['GET', 'POST'])
-    def _edit_order(order_id):
+    def edit_order(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -111,7 +111,7 @@ def setup_orders_routes(app):
         )
 
     @app.route('/delete_order/<int:order_id>', methods=['POST'])
-    def _delete_order(order_id):
+    def delete_order(order_id):
         if 'id' not in session:
             return redirect(url_for('login'))
 

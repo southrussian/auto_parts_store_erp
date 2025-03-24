@@ -8,6 +8,7 @@ from warehouses import setup_warehouses_routes
 from order_items import setup_order_items_routes
 from inventory_logs import setup_inventory_logs_routes
 
+
 def setup_routes(app):
     setup_user_routes(app)
     setup_clients_routes(app)
