@@ -6,7 +6,7 @@ from search_utils import generate_embedding
 
 def setup_products_routes(app):
     @app.route('/view_products')
-    def _view_products():
+    def view_products():
         if 'id' not in session:
             return redirect(url_for('login'))
 
@@ -56,7 +56,7 @@ def setup_products_routes(app):
                 db.session.add(product)
                 db.session.commit()
                 flash("Product added successfully!", "success")
-                return redirect(url_for('_view_products'))
+                return redirect(url_for('view_products'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -82,7 +82,7 @@ def setup_products_routes(app):
             try:
                 db.session.commit()
                 flash("Product updated successfully!", "success")
-                return redirect(url_for('_view_products'))
+                return redirect(url_for('view_products'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -102,7 +102,7 @@ def setup_products_routes(app):
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {e}", "danger")
-        return redirect(url_for('_view_products'))
+        return redirect(url_for('view_products'))
 
     @app.route('/search_products', methods=['GET', 'POST'])
     def search_products():
@@ -127,7 +127,7 @@ def setup_products_routes(app):
             # Проверяем наличие order_id в запросе
             if 'order_id' not in request.form or not request.form['order_id']:
                 flash("Не выбран заказ", "danger")
-                return redirect(url_for('_view_products'))
+                return redirect(url_for('view_products'))
 
             order_id = request.form['order_id']
             product_ids = request.form.getlist('product_ids')
@@ -140,7 +140,7 @@ def setup_products_routes(app):
             order = Order.query.get(order_id)
             if not order:
                 flash("Заказ не найден", "danger")
-                return redirect(url_for('_view_products'))
+                return redirect(url_for('view_products'))
 
             for product_id in product_ids:
                 quantity = int(request.form.get(f'quantity_{product_id}', 1))
@@ -183,4 +183,4 @@ def setup_products_routes(app):
             db.session.rollback()
             flash(f"Ошибка при добавлении товаров в заказ: {str(e)}", "danger")
 
-        return redirect(url_for('_view_products'))
+        return redirect(url_for('view_products'))
