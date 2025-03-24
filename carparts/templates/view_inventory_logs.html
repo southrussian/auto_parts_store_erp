@@ -3,51 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Логи инвентаря</title>
+    <title>Журнал движения товаров</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold">CarParts</h1>
-        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+        <h1 class="text-xl font-semibold">CarParts - Журнал движения товаров</h1>
+        <div class="space-x-4">
+            <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+            <a href="/view_products" class="text-blue-500 hover:text-blue-700">Товары</a>
+        </div>
     </nav>
 
-    <div class="max-w-4xl mx-auto mt-10">
-        <h2 class="text-3xl font-semibold mb-6">Логи инвентаря</h2>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Все записи инвентаризации</h2>
+                <div class="flex space-x-2">
+                    <a href="?sort=asc" class="px-3 py-1 rounded {{ 'bg-blue-500 text-white' if sort_order == 'asc' else 'bg-gray-200' }}">
+                        По возрастанию
+                    </a>
+                    <a href="?sort=desc" class="px-3 py-1 rounded {{ 'bg-blue-500 text-white' if sort_order == 'desc' else 'bg-gray-200' }}">
+                        По убыванию
+                    </a>
+                </div>
+            </div>
 
-        <div class="mb-4">
-            <a href="{{ url_for('add_inventory_log', product_id=product_id) }}" class="bg-black text-white px-4 py-2 rounded-lg">Добавить запись</a>
+            {% if logs %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Дата</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Товар</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Склад</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Секция</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип операции</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Количество</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for log in logs %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ log.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ log.product.name if log.product else 'Товар удален' }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    ID: {{ log.product_id }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                    {{ log.warehouse.name if log.warehouse else 'Склад удален' }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ log.warehouse.location if log.warehouse else '' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ log.section.name if log.section else 'Секция удалена' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {{ 'bg-green-100 text-green-800' if log.change_type == 'in' else 'bg-red-100 text-red-800' }}">
+                                    {{ 'Поступление' if log.change_type == 'in' else 'Списание' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ log.quantity }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ log.description or '-' }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-8 text-gray-500">
+                Нет записей в журнале
+            </div>
+            {% endif %}
         </div>
-
-        <table class="w-full bg-white shadow-md rounded-lg">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="p-3">Дата</th>
-                    <th class="p-3">Склад</th>
-                    <th class="p-3">Секция</th>
-                    <th class="p-3">Изменение</th>
-                    <th class="p-3">Количество</th>
-                    <th class="p-3">Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for log in logs %}
-                <tr class="border-t">
-                    <td class="p-3">{{ log.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
-                    <td class="p-3">{{ log.warehouse_id }}</td>
-                    <td class="p-3">{{ log.section_id }}</td>
-                    <td class="p-3">{{ log.change_type }}</td>
-                    <td class="p-3">{{ log.quantity }}</td>
-                    <td class="p-3">
-                        <a href="{{ url_for('edit_inventory_log', log_id=log.id) }}" class="text-blue-500">Редактировать</a>
-                        <form action="{{ url_for('delete_inventory_log', log_id=log.id) }}" method="POST" class="inline">
-                            <button type="submit" class="text-red-500">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </body>
 </html>

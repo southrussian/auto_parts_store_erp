@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, session
-from models import Product, db
+from models import Product, db, Order, OrderItem
 from datetime import datetime
 from search_utils import generate_embedding
 
@@ -16,7 +16,17 @@ def view_products(app):
         else:
             products = Product.query.order_by(Product.name.desc()).all()
 
-        return render_template('view_products.html', products=products, sort_order=sort_order)
+        # Получаем активные заказы (например, со статусом "Pending")
+        active_orders = Order.query.filter(
+            Order.status.in_(['Pending', 'Processing'])
+        ).all()
+
+        return render_template(
+            'view_products.html',
+            products=products,
+            sort_order=sort_order,
+            active_orders=active_orders
+        )
 
 
 def add_product(app):
@@ -115,3 +125,72 @@ def search_products(app):
             results = find_similar_products(search_query, all_products)
 
         return render_template('search_products.html', results=results)
+
+
+def add_to_order(app):
+    @app.route('/add_to_order', methods=['POST'])
+    def _add_to_order():
+        if 'id' not in session:
+            return redirect(url_for('login'))
+
+        try:
+            # Проверяем наличие order_id в запросе
+            if 'order_id' not in request.form or not request.form['order_id']:
+                flash("Не выбран заказ", "danger")
+                return redirect(url_for('_view_products'))
+
+            order_id = request.form['order_id']
+            product_ids = request.form.getlist('product_ids')
+
+            # Проверяем, что выбраны товары
+            if not product_ids:
+                flash("Не выбрано ни одного товара", "danger")
+                return redirect(url_for('_view_products'))
+
+            order = Order.query.get(order_id)
+            if not order:
+                flash("Заказ не найден", "danger")
+                return redirect(url_for('_view_products'))
+
+            for product_id in product_ids:
+                quantity = int(request.form.get(f'quantity_{product_id}', 1))
+                product = Product.query.get(product_id)
+
+                if not product:
+                    flash(f"Товар с ID {product_id} не найден", "danger")
+                    continue
+
+                if quantity <= 0:
+                    flash(f"Некорректное количество для товара {product.name}", "danger")
+                    continue
+
+                # Проверяем, есть ли уже такой товар в заказе
+                existing_item = OrderItem.query.filter_by(
+                    order_id=order_id,
+                    product_id=product_id
+                ).first()
+
+                if existing_item:
+                    existing_item.quantity += quantity
+                else:
+                    new_item = OrderItem(
+                        order_id=order_id,
+                        product_id=product_id,
+                        quantity=quantity,
+                        price=product.price
+                    )
+                    db.session.add(new_item)
+
+            # Обновляем общую сумму заказа
+            order.total_price = sum(
+                item.quantity * item.price
+                for item in order.order_items
+            )
+
+            db.session.commit()
+            flash("Товары успешно добавлены в заказ", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Ошибка при добавлении товаров в заказ: {str(e)}", "danger")
+
+        return redirect(url_for('_view_products'))

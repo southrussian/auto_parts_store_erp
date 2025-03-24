@@ -14,15 +14,18 @@ def create_user():
     db.session.commit()
     return jsonify({'message': 'User created successfully!'}), 201
 
+
 @main.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     return jsonify([{'id': user.id, 'username': user.username, 'email': user.email} for user in users])
 
+
 @main.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify({'id': user.id, 'username': user.username, 'email': user.email})
+
 
 @main.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
@@ -35,12 +38,14 @@ def update_user(id):
     db.session.commit()
     return jsonify({'message': 'User updated successfully!'})
 
+
 @main.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = User.query.get_or_404(id)
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'User deleted successfully!'})
+
 
 # Warehouse CRUD
 @main.route('/warehouses', methods=['POST'])
@@ -51,15 +56,18 @@ def create_warehouse():
     db.session.commit()
     return jsonify({'message': 'Warehouse created successfully!'}), 201
 
+
 @main.route('/warehouses', methods=['GET'])
 def get_warehouses():
     warehouses = Warehouse.query.all()
     return jsonify([{'id': w.id, 'name': w.name, 'location': w.location} for w in warehouses])
 
+
 @main.route('/warehouses/<int:id>', methods=['GET'])
 def get_warehouse(id):
     warehouse = Warehouse.query.get_or_404(id)
     return jsonify({'id': warehouse.id, 'name': warehouse.name, 'location': warehouse.location})
+
 
 @main.route('/warehouses/<int:id>', methods=['PUT'])
 def update_warehouse(id):
@@ -70,12 +78,14 @@ def update_warehouse(id):
     db.session.commit()
     return jsonify({'message': 'Warehouse updated successfully!'})
 
+
 @main.route('/warehouses/<int:id>', methods=['DELETE'])
 def delete_warehouse(id):
     warehouse = Warehouse.query.get_or_404(id)
     db.session.delete(warehouse)
     db.session.commit()
     return jsonify({'message': 'Warehouse deleted successfully!'})
+
 
 # WarehouseSection CRUD
 @main.route('/warehouse_sections', methods=['POST'])
@@ -86,15 +96,18 @@ def create_warehouse_section():
     db.session.commit()
     return jsonify({'message': 'Warehouse section created successfully!'}), 201
 
+
 @main.route('/warehouse_sections', methods=['GET'])
 def get_warehouse_sections():
     sections = WarehouseSection.query.all()
     return jsonify([{'id': s.id, 'warehouse_id': s.warehouse_id, 'name': s.name, 'capacity': s.capacity} for s in sections])
 
+
 @main.route('/warehouse_sections/<int:id>', methods=['GET'])
 def get_warehouse_section(id):
     section = WarehouseSection.query.get_or_404(id)
     return jsonify({'id': section.id, 'warehouse_id': section.warehouse_id, 'name': section.name, 'capacity': section.capacity})
+
 
 @main.route('/warehouse_sections/<int:id>', methods=['PUT'])
 def update_warehouse_section(id):
@@ -105,12 +118,14 @@ def update_warehouse_section(id):
     db.session.commit()
     return jsonify({'message': 'Warehouse section updated successfully!'})
 
+
 @main.route('/warehouse_sections/<int:id>', methods=['DELETE'])
 def delete_warehouse_section(id):
     section = WarehouseSection.query.get_or_404(id)
     db.session.delete(section)
     db.session.commit()
     return jsonify({'message': 'Warehouse section deleted successfully!'})
+
 
 # Product CRUD
 @main.route('/products', methods=['POST'])
@@ -121,16 +136,17 @@ def create_product():
     db.session.commit()
     return jsonify({'message': 'Product created successfully!'}), 201
 
+
 @main.route('/products', methods=['GET'])
 def get_products():
     products = Product.query.all()
     return jsonify([{'id': p.id, 'name': p.name, 'price': p.price, 'stock': p.stock} for p in products])
 
+
 @main.route('/products/<int:id>', methods=['GET'])
 def get_product(id):
     product = Product.query.get_or_404(id)
     return jsonify({'id': product.id, 'name': product.name, 'price': product.price, 'stock': product.stock})
-
 @main.route('/products/<int:id>', methods=['PUT'])
 def update_product(id):
     product = Product.query.get_or_404(id)
@@ -141,12 +157,14 @@ def update_product(id):
     db.session.commit()
     return jsonify({'message': 'Product updated successfully!'})
 
+
 @main.route('/products/<int:id>', methods=['DELETE'])
 def delete_product(id):
     product = Product.query.get_or_404(id)
     db.session.delete(product)
     db.session.commit()
     return jsonify({'message': 'Product deleted successfully!'})
+
 
 # InventoryLog CRUD
 @main.route('/inventory_logs', methods=['POST'])
@@ -157,15 +175,18 @@ def create_inventory_log():
     db.session.commit()
     return jsonify({'message': 'Inventory log created successfully!'}), 201
 
+
 @main.route('/inventory_logs', methods=['GET'])
 def get_inventory_logs():
     logs = InventoryLog.query.all()
     return jsonify([{'id': l.id, 'product_id': l.product_id, 'change_type': l.change_type, 'quantity': l.quantity} for l in logs])
 
+
 @main.route('/inventory_logs/<int:id>', methods=['GET'])
 def get_inventory_log(id):
     log = InventoryLog.query.get_or_404(id)
     return jsonify({'id': log.id, 'product_id': log.product_id, 'change_type': log.change_type, 'quantity': log.quantity})
+
 
 @main.route('/inventory_logs/<int:id>', methods=['PUT'])
 def update_inventory_log(id):
@@ -176,12 +197,14 @@ def update_inventory_log(id):
     db.session.commit()
     return jsonify({'message': 'Inventory log updated successfully!'})
 
+
 @main.route('/inventory_logs/<int:id>', methods=['DELETE'])
 def delete_inventory_log(id):
     log = InventoryLog.query.get_or_404(id)
     db.session.delete(log)
     db.session.commit()
     return jsonify({'message': 'Inventory log deleted successfully!'})
+
 
 # Client CRUD
 @main.route('/clients', methods=['POST'])
@@ -192,15 +215,18 @@ def create_client():
     db.session.commit()
     return jsonify({'message': 'Client created successfully!'}), 201
 
+
 @main.route('/clients', methods=['GET'])
 def get_clients():
     clients = Client.query.all()
     return jsonify([{'id': c.id, 'name': c.name, 'email': c.email, 'phone': c.phone} for c in clients])
 
+
 @main.route('/clients/<int:id>', methods=['GET'])
 def get_client(id):
     client = Client.query.get_or_404(id)
     return jsonify({'id': client.id, 'name': client.name, 'email': client.email, 'phone': client.phone})
+
 
 @main.route('/clients/<int:id>', methods=['PUT'])
 def update_client(id):
@@ -214,6 +240,7 @@ def update_client(id):
     db.session.commit()
     return jsonify({'message': 'Client updated successfully!'})
 
+
 @main.route('/clients/<int:id>', methods=['DELETE'])
 def delete_client(id):
     client = Client.query.get_or_404(id)
@@ -223,8 +250,6 @@ def delete_client(id):
 
 
 # Order CRUD
-
-# Business Logic: Create Order
 @main.route('/orders', methods=['POST'])
 def create_order():
     data = request.get_json()
@@ -253,6 +278,7 @@ def create_order():
     db.session.commit()
     return jsonify({'message': 'Order created successfully!', 'order_id': order.id}), 201
 
+
 # Business Logic: Pay for Order
 @main.route('/orders/<int:id>/pay', methods=['POST'])
 def pay_order(id):
@@ -263,6 +289,7 @@ def pay_order(id):
     order.status = 'Paid'
     db.session.commit()
     return jsonify({'message': 'Order paid successfully!'})
+
 
 # Business Logic: Dispense Order Items
 @main.route('/orders/<int:id>/dispense', methods=['POST'])
@@ -285,6 +312,7 @@ def dispense_order(id):
     order.status = 'Completed'
     db.session.commit()
     return jsonify({'message': 'Order items dispensed successfully!'})
+
 
 @main.route('/orders', methods=['GET'])
 def get_orders():
@@ -324,15 +352,18 @@ def create_order_item():
     db.session.commit()
     return jsonify({'message': 'Order item created successfully!'}), 201
 
+
 @main.route('/order_items', methods=['GET'])
 def get_order_items():
     items = OrderItem.query.all()
     return jsonify([{'id': i.id, 'order_id': i.order_id, 'product_id': i.product_id, 'quantity': i.quantity} for i in items])
 
+
 @main.route('/order_items/<int:id>', methods=['GET'])
 def get_order_item(id):
     item = OrderItem.query.get_or_404(id)
     return jsonify({'id': item.id, 'order_id': item.order_id, 'product_id': item.product_id, 'quantity': item.quantity})
+
 
 @main.route('/order_items/<int:id>', methods=['PUT'])
 def update_order_item(id):
@@ -351,6 +382,7 @@ def delete_order_item(id):
     db.session.commit()
     return jsonify({'message': 'Order item deleted successfully!'})
 
+
 # Supplier CRUD
 @main.route('/suppliers', methods=['POST'])
 def create_supplier():
@@ -360,15 +392,18 @@ def create_supplier():
     db.session.commit()
     return jsonify({'message': 'Supplier created successfully!'}), 201
 
+
 @main.route('/suppliers', methods=['GET'])
 def get_suppliers():
     suppliers = Supplier.query.all()
     return jsonify([{'id': s.id, 'name': s.name, 'city': s.city} for s in suppliers])
 
+
 @main.route('/suppliers/<int:id>', methods=['GET'])
 def get_supplier(id):
     supplier = Supplier.query.get_or_404(id)
     return jsonify({'id': supplier.id, 'name': supplier.name, 'city': supplier.city})
+
 
 @main.route('/suppliers/<int:id>', methods=['PUT'])
 def update_supplier(id):
@@ -379,6 +414,7 @@ def update_supplier(id):
     supplier.city = data['city']
     db.session.commit()
     return jsonify({'message': 'Supplier updated successfully!'})
+
 
 @main.route('/suppliers/<int:id>', methods=['DELETE'])
 def delete_supplier(id):

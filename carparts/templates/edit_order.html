@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать заказ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts - Редактирование заказа #{{ order.id }}</h1>
+        <a href="/view_orders" class="text-gray-600 hover:text-black">Назад к заказам</a>
+    </nav>
+
+    <div class="max-w-4xl mx-auto mt-10">
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-6">Основная информация</h2>
+
+            <form action="/edit_order/{{ order.id }}" method="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label for="client_id" class="block text-gray-700 mb-2">Клиент:</label>
+                        <select name="client_id" id="client_id" class="w-full border rounded p-2" required>
+                            {% for client in clients %}
+                            <option value="{{ client.id }}" {% if client.id == order.client_id %}selected{% endif %}>
+                                {{ client.name }} ({{ client.city }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="user_id" class="block text-gray-700 mb-2">Менеджер:</label>
+                        <select name="user_id" id="user_id" class="w-full border rounded p-2" required>
+                            {% for user in users %}
+                            <option value="{{ user.id }}" {% if user.id == order.user_id %}selected{% endif %}>
+                                {{ user.username }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-gray-700 mb-2">Статус:</label>
+                        <select name="status" id="status" class="w-full border rounded p-2" required>
+                            {% for status in statuses %}
+                            <option value="{{ status }}" {% if status == order.status %}selected{% endif %}>
+                                {{ status }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="total_price" class="block text-gray-700 mb-2">Общая сумма:</label>
+                        <input type="number" name="total_price" id="total_price" step="0.01" min="0"
+                               class="w-full border rounded p-2" value="{{ order.total_price }}" required>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold mb-6">Товары в заказе</h2>
+
+            <div class="mb-4">
+                <a href="/view_order_items/{{ order.id }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Управление товарами
+                </a>
+            </div>
+
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="p-3 text-left">Товар</th>
+                        <th class="p-3 text-left">Количество</th>
+                        <th class="p-3 text-left">Цена</th>
+                        <th class="p-3 text-left">Сумма</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.order_items %}
+                    <tr class="border-t">
+                        <td class="p-3">{{ item.product.name }}</td>
+                        <td class="p-3">{{ item.quantity }}</td>
+                        <td class="p-3">{{ item.price }} ₽</td>
+                        <td class="p-3">{{ item.quantity * item.price }} ₽</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="p-3 text-center text-gray-500">Нет товаров в заказе</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="border-t font-semibold">
+                        <td colspan="3" class="p-3 text-right">Итого:</td>
+                        <td class="p-3">{{ order.total_price }} ₽</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

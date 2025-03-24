@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать заказ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts - Новый заказ</h1>
+        <a href="/view_orders" class="text-gray-600 hover:text-black">Назад к заказам</a>
+    </nav>
+
+    <div class="max-w-2xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-6">Создание нового заказа</h2>
+
+        <form action="/add_order" method="POST">
+            <div class="mb-4">
+                <label for="client_id" class="block text-gray-700 mb-2">Клиент:</label>
+                <select name="client_id" id="client_id" class="w-full border rounded p-2" required>
+                    <option value="">-- Выберите клиента --</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.name }} ({{ client.city }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="user_id" class="block text-gray-700 mb-2">Менеджер:</label>
+                <select name="user_id" id="user_id" class="w-full border rounded p-2" required>
+                    <option value="">-- Выберите менеджера --</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="status" class="block text-gray-700 mb-2">Статус:</label>
+                <select name="status" id="status" class="w-full border rounded p-2" required>
+                    <option value="Pending" selected>Ожидает оплаты</option>
+                    <option value="Paid">Оплачен</option>
+                    <option value="Completed">Завершен</option>
+                    <option value="Cancelled">Отменен</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="total_price" class="block text-gray-700 mb-2">Общая сумма:</label>
+                <input type="number" name="total_price" id="total_price" step="0.01" min="0"
+                       class="w-full border rounded p-2" value="0.00" required>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Создать заказ
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

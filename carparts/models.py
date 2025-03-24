@@ -9,7 +9,6 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
 
     def set_password(self, password):
@@ -62,6 +61,10 @@ class InventoryLog(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     description = db.Column(db.Text, nullable=True)
 
+    product = db.relationship('Product', backref='logs')
+    warehouse = db.relationship('Warehouse', backref='logs')
+    section = db.relationship('WarehouseSection', backref='logs')
+
 
 class Client(db.Model):
     __tablename__ = 'clients'
@@ -92,6 +95,12 @@ class OrderItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
+
+    product = db.relationship('Product', backref='order_items')
+
+    @property
+    def price_mult_quantity(self):
+        return self.price * self.quantity
 
 
 class Supplier(db.Model):

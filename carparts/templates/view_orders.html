@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказы</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold">CarParts</h1>
+        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+        <a href="/view_products" class="text-gray-600 hover:text-black">Товары</a>
+    </nav>
+    <div class="max-w-6xl mx-auto mt-10">
+        <h2 class="text-3xl font-semibold mb-6">Список заказов</h2>
+        <a href="/add_order" class="bg-black text-white p-3 rounded-lg">Создать заказ</a>
+        <table class="w-full mt-6 bg-white shadow-md rounded-lg">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-3">ID</th>
+                    <th class="p-3">Клиент</th>
+                    <th class="p-3">Статус</th>
+                    <th class="p-3">Общая сумма</th>
+                    <th class="p-3">Дата создания</th>
+                    <th class="p-3">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="border-t">
+                    <td class="p-3">{{ order.id }}</td>
+                    <td class="p-3">{{ order.client_id }}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded
+                            {% if order.status == 'Completed' %}bg-green-200 text-green-800
+                            {% elif order.status == 'Paid' %}bg-blue-200 text-blue-800
+                            {% else %}bg-yellow-200 text-yellow-800{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td class="p-3">{{ order.total_price }}</td>
+                    <td class="p-3">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td class="p-3">
+                        <a href="/edit_order/{{ order.id }}" class="text-blue-500">Редактировать</a>
+                        <a href="/view_order_items/{{ order.id }}" class="text-green-500 ml-2">Просмотр</a>
+                        <form action="/delete_order/{{ order.id }}" method="POST" class="inline">
+                            <button type="submit" class="text-red-500 ml-2">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

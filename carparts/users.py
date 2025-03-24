@@ -7,14 +7,13 @@ def register(app):
     def register():
         if request.method == 'POST':
             username = request.form['username']
-            email = request.form['email']
             password = request.form['password']
 
-            if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+            if User.query.filter_by(username=username).first():
                 flash('Пользователь с таким именем или email уже существует.', 'danger')
                 return redirect(url_for('register'))
 
-            new_user = User(username=username, email=email)
+            new_user = User(username=username)
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()

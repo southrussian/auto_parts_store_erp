@@ -7,10 +7,13 @@ from logging.handlers import RotatingFileHandler
 from clients import view_clients, add_client, edit_client, delete_client
 from users import login, logout, register, view_users
 from orders import view_orders, edit_order, add_order, delete_order
-from products import view_products, add_product, edit_product, delete_product, search_products
+from products import view_products, add_product, edit_product, delete_product, search_products, add_to_order
 from suppliers import view_suppliers, add_supplier, edit_supplier, delete_supplier
 from warehouse_section import (view_warehouse_sections, add_warehouse_section, edit_warehouse_section,
                                delete_warehouse_section)
+from warehouses import view_warehouses, add_warehouse, edit_warehouse, delete_warehouse
+from order_items import view_order_items, add_order_item, edit_order_item, delete_order_item
+from inventory_logs import register_inventory_logs_routes
 from flask_migrate import Migrate
 
 load_dotenv()
@@ -52,6 +55,7 @@ add_product(app)
 edit_product(app)
 delete_product(app)
 search_products(app)
+add_to_order(app)
 
 view_suppliers(app)
 add_supplier(app)
@@ -62,6 +66,18 @@ view_warehouse_sections(app)
 add_warehouse_section(app)
 edit_warehouse_section(app)
 delete_warehouse_section(app)
+
+view_warehouses(app)
+edit_warehouse(app)
+add_warehouse(app)
+delete_warehouse(app)
+
+view_order_items(app)
+add_order_item(app)
+edit_order_item(app)
+delete_order_item(app)
+
+register_inventory_logs_routes(app)
 
 
 @app.route('/')

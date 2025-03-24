@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, session
-from models import Order, db
+from models import *
 from datetime import datetime
 
 
@@ -21,6 +21,9 @@ def add_order(app):
     def _add_order():
         if 'id' not in session:
             return redirect(url_for('login'))
+
+        users = User.query.all()
+        clients = Client.query.all()
 
         if request.method == 'POST':
             client_id = request.form['client_id']
@@ -45,7 +48,7 @@ def add_order(app):
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
 
-        return render_template('add_order.html')
+        return render_template('add_order.html', clients=clients, users=users)
 
 
 def edit_order(app):
@@ -55,22 +58,61 @@ def edit_order(app):
             return redirect(url_for('login'))
 
         order = Order.query.get_or_404(order_id)
+        old_status = order.status
 
         if request.method == 'POST':
             order.client_id = request.form['client_id']
             order.user_id = request.form['user_id']
-            order.status = request.form.get('status', 'Pending')
+            new_status = request.form.get('status', 'Pending')
+            order.status = new_status
             order.total_price = request.form['total_price']
 
             try:
+                # Если статус изменился на Paid/Completed
+                if new_status in ['Paid', 'Completed'] and old_status not in ['Paid', 'Completed']:
+                    for item in order.order_items:
+                        product = Product.query.get(item.product_id)
+
+                        if product.stock < item.quantity:
+                            raise Exception(
+                                f"Недостаточно товара: {product.name}. "
+                                f"Доступно: {product.stock}, Требуется: {item.quantity}"
+                            )
+
+                        # Списание товара
+                        product.stock -= item.quantity
+
+                        # Создаем запись в InventoryLog
+                        log = InventoryLog(
+                            product_id=product.id,
+                            warehouse_id=product.section.warehouse_id,
+                            section_id=product.warehouse_section_id,
+                            change_type='out',
+                            quantity=item.quantity,
+                            description=f"Списание по заказу #{order.id} ({new_status})",
+                            created_at=datetime.now()
+                        )
+                        db.session.add(log)
+
                 db.session.commit()
-                flash("Order updated successfully!", "success")
+                flash("Заказ успешно обновлен!", "success")
                 return redirect(url_for('view_orders'))
+
             except Exception as e:
                 db.session.rollback()
-                flash(f"An error occurred: {e}", "danger")
+                flash(f"Ошибка: {str(e)}", "danger")
+                return redirect(url_for('_edit_order', order_id=order_id))
 
-        return render_template('edit_order.html', order=order)
+        # Для GET запроса
+        clients = Client.query.all()
+        users = User.query.all()
+        return render_template(
+            'edit_order.html',
+            order=order,
+            clients=clients,
+            users=users,
+            statuses=['Pending', 'Paid', 'Completed']
+        )
 
 
 def delete_order(app):
