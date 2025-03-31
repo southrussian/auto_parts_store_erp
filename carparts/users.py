@@ -40,7 +40,7 @@ def setup_user_routes(app):
 
     @app.route('/logout')
     def logout():
-        session.pop('user_id', None)
+        session.pop('id', None)
         flash('Вы вышли из системы.', 'info')
         return redirect(url_for('login'))
 
