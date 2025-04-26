@@ -5,18 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактировать клиента</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-card {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            background: linear-gradient(to bottom right, white, #f8fafc);
+        }
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-96">
-        <h2 class="text-2xl font-semibold text-center mb-4">Редактировать клиента</h2>
-        <form action="/edit_client/{{ client.id }}" method="POST">
-            <input type="text" name="name" value="{{ client.name }}" class="w-full p-3 rounded-lg border mb-3" required>
-            <input type="email" name="email" value="{{ client.email }}" class="w-full p-3 rounded-lg border mb-3" required>
-            <input type="text" name="phone" value="{{ client.phone }}" class="w-full p-3 rounded-lg border mb-3" required>
-            <input type="text" name="city" value="{{ client.city }}" class="w-full p-3 rounded-lg border mb-3">
-            <input type="text" name="address" value="{{ client.address }}" class="w-full p-3 rounded-lg border mb-3">
-            <button type="submit" class="w-full bg-black text-white p-3 rounded-lg">Сохранить</button>
-        </form>
+<body class="bg-gradient-to-br from-blue-50 to-gray-50 min-h-screen">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-xl font-semibold text-blue-600">CarParts - Редактирование клиента</h1>
+        <div class="flex items-center space-x-4">
+            <a href="{{ url_for('view_clients') }}" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-arrow-left mr-1"></i> Назад
+            </a>
+            <a href="/logout" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-sign-out-alt mr-1"></i> Выход
+            </a>
+        </div>
+    </nav>
+
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <div class="form-card p-8">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-edit text-blue-500 text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Редактирование клиента</h2>
+                <p class="text-gray-500">Обновите информацию о клиенте</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-6 p-4 rounded-lg bg-{{ category }}-100 text-{{ category }}-800">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Имя клиента *</label>
+                    <div class="relative">
+                        <input type="text" id="name" name="name" value="{{ client.name }}" required
+                               class="input-field w-full px-4 py-3 rounded-lg pl-10 focus:outline-none">
+                        <i class="fas fa-user absolute left-3 top-3.5 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <div class="relative">
+                            <input type="email" id="email" name="email" value="{{ client.email }}"
+                                   class="input-field w-full px-4 py-3 rounded-lg pl-10 focus:outline-none">
+                            <i class="fas fa-envelope absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
+                        <div class="relative">
+                            <input type="tel" id="phone" name="phone" value="{{ client.phone }}" required
+                                   class="input-field w-full px-4 py-3 rounded-lg pl-10 focus:outline-none">
+                            <i class="fas fa-phone-alt absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Город</label>
+                        <div class="relative">
+                            <input type="text" id="city" name="city" value="{{ client.city }}"
+                                   class="input-field w-full px-4 py-3 rounded-lg pl-10 focus:outline-none">
+                            <i class="fas fa-city absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес</label>
+                        <div class="relative">
+                            <input type="text" id="address" name="address" value="{{ client.address }}"
+                                   class="input-field w-full px-4 py-3 rounded-lg pl-10 focus:outline-none">
+                            <i class="fas fa-map-marker-alt absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 flex justify-end space-x-3">
+                    <a href="{{ url_for('view_clients') }}"
+                       class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition flex items-center gap-2">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                    <button type="submit"
+                            class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center gap-2">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>

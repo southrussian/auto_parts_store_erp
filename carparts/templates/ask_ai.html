@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запрос к AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 2rem;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .answer-box {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid #0d6efd;
+        }
+        textarea {
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Запрос к AI-ассистенту</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">Ваш запрос:</label>
+                <textarea class="form-control" id="prompt" name="prompt"
+                          placeholder="Например: 'Объясни, как работает система охлаждения двигателя'">{{ request.form.prompt if request.method == 'POST' else '' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary ms-2">Назад</a>
+        </form>
+
+        {% if answer %}
+        <div class="answer-box mt-4">
+            <h4>Ответ:</h4>
+            <div class="mt-2">{{ answer|safe }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

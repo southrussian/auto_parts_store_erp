@@ -8,12 +8,30 @@ def setup_clients_routes(app):
     def view_clients():
         if 'id' not in session:
             return redirect(url_for('login'))
+
+        search_query = request.args.get('search', '').strip()
         sort_order = request.args.get('sort', 'asc')
-        if sort_order == 'asc':
-            clients = Client.query.order_by(Client.name.asc()).all()
+
+        if search_query:
+            # Полнотекстовый поиск с игнорированием регистра
+            clients = Client.query.filter(
+                db.or_(
+                    Client.name.ilike(f'%{search_query}%'),
+                    Client.email.ilike(f'%{search_query}%'),
+                    Client.phone.ilike(f'%{search_query}%'),
+                    Client.city.ilike(f'%{search_query}%'),
+                    Client.address.ilike(f'%{search_query}%')
+                )
+            )
         else:
-            clients = Client.query.order_by(Client.name.desc()).all()
-        return render_template('view_clients.html', clients=clients, sort_order=sort_order)
+            clients = Client.query
+
+        clients = clients.order_by(Client.name.asc() if sort_order == 'asc' else Client.name.desc()).all()
+
+        return render_template('view_clients.html',
+                               clients=clients,
+                               sort_order=sort_order,
+                               search_query=search_query)
 
     @app.route('/add_client', methods=['GET', 'POST'])
     def add_client():
@@ -40,7 +58,7 @@ def setup_clients_routes(app):
                 db.session.add(client)
                 db.session.commit()
                 flash("Client added successfully!", "success")
-                return redirect(url_for('_view_clients'))
+                return redirect(url_for('view_clients'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -64,7 +82,7 @@ def setup_clients_routes(app):
             try:
                 db.session.commit()
                 flash("Client updated successfully!", "success")
-                return redirect(url_for('_view_clients'))
+                return redirect(url_for('view_clients'))
             except Exception as e:
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
@@ -84,4 +102,4 @@ def setup_clients_routes(app):
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {e}", "danger")
-        return redirect(url_for('_view_clients'))
+        return redirect(url_for('view_clients'))

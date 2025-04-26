@@ -32,7 +32,7 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">ID поставщика</label>
-                <input type="number" name="supplier_id" value="{{ product.supplier_id if product.supplier_id else '' }}" class="w-full p-2 border rounded-lg">
+                <input type="number" name="supplier_id" value="{{ product.supplier.name if product.supplier.name else '' }}" class="w-full p-2 border rounded-lg">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">ID секции склада</label>

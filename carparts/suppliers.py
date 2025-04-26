@@ -8,12 +8,28 @@ def setup_suppliers_routes(app):
     def view_suppliers():
         if 'id' not in session:
             return redirect(url_for('login'))
+
+        search_query = request.args.get('search', '').strip()
         sort_order = request.args.get('sort', 'asc')
-        if sort_order == 'asc':
-            suppliers = Supplier.query.order_by(Supplier.name.asc()).all()
+
+        if search_query:
+            # Полнотекстовый поиск с игнорированием регистра
+            suppliers = Supplier.query.filter(
+                db.or_(
+                    Supplier.name.ilike(f'%{search_query}%'),
+                    Supplier.contact_info.ilike(f'%{search_query}%'),
+                    Supplier.city.ilike(f'%{search_query}%'),
+                )
+            )
         else:
-            suppliers = Supplier.query.order_by(Supplier.name.desc()).all()
-        return render_template('view_suppliers.html', suppliers=suppliers, sort_order=sort_order)
+            suppliers = Supplier.query
+
+        suppliers = suppliers.order_by(Supplier.name.asc() if sort_order == 'asc' else Supplier.name.desc()).all()
+
+        return render_template('view_suppliers.html',
+                               suppliers=suppliers,
+                               sort_order=sort_order,
+                               search_query=search_query)
 
     @app.route('/add_supplier', methods=['GET', 'POST'])
     def add_supplier():

@@ -7,6 +7,7 @@ from warehouse_section import setup_warehouse_sections_routes
 from warehouses import setup_warehouses_routes
 from order_items import setup_order_items_routes
 from inventory_logs import setup_inventory_logs_routes
+from gigachat_ask import setup_gigachat_routes
 
 
 def setup_routes(app):
@@ -19,3 +20,4 @@ def setup_routes(app):
     setup_warehouses_routes(app)
     setup_order_items_routes(app)
     setup_inventory_logs_routes(app)
+    setup_gigachat_routes(app)

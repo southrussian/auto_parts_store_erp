@@ -36,6 +36,7 @@ def setup_products_routes(app):
         if request.method == 'POST':
             name = request.form['name']
             description = request.form['description']
+            category = request.form['category']
             price = float(request.form['price'])
             stock = int(request.form['stock'])
             supplier_id = request.form.get('supplier_id')
@@ -44,6 +45,7 @@ def setup_products_routes(app):
             product = Product(
                 name=name,
                 description=description,
+                category=category,
                 price=price,
                 stock=stock,
                 supplier_id=supplier_id if supplier_id else None,
@@ -72,6 +74,7 @@ def setup_products_routes(app):
 
         if request.method == 'POST':
             product.name = request.form['name']
+            product.category = request.form['category']
             product.description = request.form['description']
             product.price = float(request.form['price'])
             product.stock = int(request.form['stock'])
