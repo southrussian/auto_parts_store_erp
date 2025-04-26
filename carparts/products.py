@@ -80,7 +80,7 @@ def setup_products_routes(app):
             product.stock = int(request.form['stock'])
             product.supplier_id = request.form.get('supplier_id')
             product.warehouse_section_id = int(request.form['warehouse_section_id'])
-            product.embedding = generate_embedding(f"{product.name} {product.description}")
+            product.embedding = generate_embedding(f"{product.name} {product.description} {product.category}")
 
             try:
                 db.session.commit()

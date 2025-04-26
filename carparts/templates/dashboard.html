@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold text-blue-600">CarParts Dashboard</h1>
+        <h1 class="text-xl font-semibold text-purple-600">CarParts</h1>
         <div class="flex items-center space-x-4">
             <span class="text-gray-600">Администратор</span>
             <a href="/logout" class="text-gray-600 hover:text-black flex items-center">
@@ -24,17 +24,17 @@
     <div class="max-w-6xl mx-auto px-4 py-8">
         <!-- Статистика -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
                 <h3 class="text-gray-500 text-sm font-medium">Всего клиентов</h3>
                 <p class="text-2xl font-bold">{{ clients_count }}</p>
                 <p class="text-green-500 text-sm mt-1">+12% за месяц</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
                 <h3 class="text-gray-500 text-sm font-medium">Товаров на складе</h3>
                 <p class="text-2xl font-bold">{{ products_count }}</p>
                 <p class="text-red-500 text-sm mt-1">-3% за месяц</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
                 <h3 class="text-gray-500 text-sm font-medium">Продажи за месяц</h3>
                 <p class="text-2xl font-bold">{{ monthly_sales }}</p>
                 <p class="text-green-500 text-sm mt-1">+2 за месяц</p>
@@ -50,28 +50,56 @@
         <h2 class="text-xl font-semibold mb-4">Быстрый доступ</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <a href="{{ url_for('view_clients') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 Клиенты
             </a>
             <a href="{{ url_for('view_products') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
                 Товары
             </a>
             <a href="{{ url_for('view_inventory_logs') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Логи
             </a>
             <a href="{{ url_for('view_suppliers') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Поставщики
+            </a>
+
+            <a href="{{ url_for('view_orders') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Заказы
+            </a>
+
+            <a href="{{ url_for('search_products') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Поиск товаров
+            </a>
+
+            <a href="{{ url_for('ask_ai') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                ИИ-Ассистент
+            </a>
+
+            <a href="{{ url_for('view_warehouses') }}" class="bg-white p-6 rounded-xl shadow-md text-center hover:bg-gray-50 transition duration-200 flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+                Склады
             </a>
         </div>
     </div>
