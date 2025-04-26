@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, session
-from models import Product, db, Order, OrderItem
+from models import Product, db, Order, OrderItem, WarehouseSection
 from datetime import datetime
 from search_utils import generate_embedding
 
@@ -18,7 +18,7 @@ def setup_products_routes(app):
 
         # Получаем активные заказы (например, со статусом "Pending")
         active_orders = Order.query.filter(
-            Order.status.in_(['Pending', 'Processing'])
+            Order.status.in_(['Активный'])
         ).all()
 
         return render_template(
@@ -32,6 +32,8 @@ def setup_products_routes(app):
     def add_product():
         if 'id' not in session:
             return redirect(url_for('login'))
+
+        sections = WarehouseSection.query.all()
 
         if request.method == 'POST':
             name = request.form['name']
@@ -51,7 +53,7 @@ def setup_products_routes(app):
                 supplier_id=supplier_id if supplier_id else None,
                 warehouse_section_id=warehouse_section_id,
                 created_at=datetime.now(),
-                embedding=generate_embedding(f"{name} {description}")
+                embedding=generate_embedding(f"{name} {description} {category}")
             )
 
             try:
@@ -63,7 +65,7 @@ def setup_products_routes(app):
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
 
-        return render_template('add_product.html')
+        return render_template('add_product.html', sections=sections)
 
     @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
     def edit_product(product_id):
@@ -71,6 +73,7 @@ def setup_products_routes(app):
             return redirect(url_for('login'))
 
         product = Product.query.get_or_404(product_id)
+        sections = WarehouseSection.query.all()
 
         if request.method == 'POST':
             product.name = request.form['name']
@@ -90,7 +93,7 @@ def setup_products_routes(app):
                 db.session.rollback()
                 flash(f"An error occurred: {e}", "danger")
 
-        return render_template('edit_product.html', product=product)
+        return render_template('edit_product.html', product=product, sections=sections)
 
     @app.route('/delete_product/<int:product_id>', methods=['POST'])
     def delete_product(product_id):

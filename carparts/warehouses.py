@@ -8,12 +8,25 @@ def setup_warehouses_routes(app):
     def view_warehouses():
         if 'id' not in session:
             return redirect(url_for('login'))
+        search_query = request.args.get('search', '').strip()
         sort_order = request.args.get('sort', 'asc')
-        if sort_order == 'asc':
-            warehouses = Warehouse.query.order_by(Warehouse.name.asc()).all()
+
+        if search_query:
+            warehouses = Warehouse.query.filter(
+                db.or_(
+                    Warehouse.name.ilike(f'%{search_query}%'),
+                    Warehouse.location.ilike(f'%{search_query}%'),
+                )
+            )
         else:
-            warehouses = Warehouse.query.order_by(Warehouse.name.desc()).all()
-        return render_template('view_warehouses.html', warehouses=warehouses, sort_order=sort_order)
+            warehouses = Warehouse.query
+
+        warehouses = warehouses.order_by(Warehouse.name.asc() if sort_order == 'asc' else Warehouse.name.desc()).all()
+
+        return render_template('view_warehouses.html',
+                               warehouses=warehouses,
+                               sort_order=sort_order,
+                               search_query=search_query)
 
     @app.route('/add_warehouse', methods=['GET', 'POST'])
     def add_warehouse():

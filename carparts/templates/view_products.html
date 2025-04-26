@@ -3,74 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Продукты</title>
+    <title>Товары</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold">CarParts</h1>
-        <a href="/search_products" class="text-gray-600 hover:text-black">Поиск</a>
-        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
-        <a href="/view_orders" class="text-gray-600 hover:text-black">Заказы</a>
-    </nav>
-    <div class="max-w-4xl mx-auto mt-10">
-        <h2 class="text-3xl font-semibold mb-6">Список товаров</h2>
-        <div class="flex space-x-4 mb-6">
-            <a href="/add_product" class="bg-black text-white p-3 rounded-lg">Добавить товар</a>
-            <a href="/add_order" class="bg-blue-500 text-white p-3 rounded-lg">Создать новый заказ</a>
+        <h1 class="text-xl font-semibold text-purple-600">CarParts - Товары</h1>
+        <div class="flex items-center space-x-4">
+            <a href="{{ url_for('dashboard') }}" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-arrow-left mr-1"></i> Назад
+            </a>
+            <a href="/logout" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-sign-out-alt mr-1"></i> Выход
+            </a>
         </div>
-        <form action="/add_to_order" method="POST">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr class="bg-gray-200">
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Выбрать</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Цена</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Количество</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Поставщик</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Секция склада</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for product in products %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <input type="checkbox" name="product_ids" value="{{ product.id }}">
-                            <input type="number" name="quantity_{{ product.id }}" min="1" max="{{ product.stock }}" value="1" class="w-16 ml-2 border rounded p-1">
-                        </td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.name }}</td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.description }}</td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.price }}</td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.stock }}</td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.supplier_id if product.supplier_id else "Нет" }}</td>
-                        <td class="text-sm font-medium text-gray-900">{{ product.warehouse_section_id }}</td>
-                        <td class="text-sm font-medium text-gray-900">
-                            <a href="/edit_product/{{ product.id }}" class="text-blue-500">Редактировать</a>
-                            <form action="/delete_product/{{ product.id }}" method="POST" class="inline">
-                                <button type="submit" class="text-red-500">Удалить</button>
-                            </form>
-                        </td>
-                    </tr>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <h2 class="text-2xl font-semibold">Управление товарами</h2>
+            <div class="flex flex-col md:flex-row w-full md:w-auto gap-3">
+                <a href="{{ url_for('add_product') }}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i> Добавить товар
+                </a>
+                <a href="{{ url_for('view_products', sort='asc' if sort_order == 'desc' else 'desc') }}"
+                   class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    <i class="fas fa-sort-alpha-{{ 'down' if sort_order == 'asc' else 'up' }}"></i> Сортировка
+                </a>
+                <a href="{{ url_for('search_products') }}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    <i class="fas fa-search"></i> Поиск
+                </a>
+            </div>
+        </div>
+
+        {% if not products %}
+        <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-medium text-gray-600">Товары не найдены</h3>
+            <p class="text-gray-500 mt-2">Добавьте первый товар</p>
+        </div>
+        {% else %}
+        <form method="POST" action="{{ url_for('add_to_order') }}">
+            <div class="mb-4">
+                <label for="order_id" class="block text-sm font-medium text-gray-700 mb-2">Выберите заказ:</label>
+                <select name="order_id" id="order_id" class="w-full md:w-64 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                    {% for order in active_orders %}
+                    <option value="{{ order.id }}">Заказ #{{ order.id }} ({{ order.status }})</option>
                     {% endfor %}
-                </tbody>
-            </table>
-            <div class="mt-4">
-                <label for="order_id" class="block mb-2">Выберите заказ:</label>
-                {% if active_orders %}
-                    <select name="order_id" id="order_id" class="border rounded p-2" required>
-                        <option value="">-- Выберите заказ --</option>
-                        {% for order in active_orders %}
-                        <option value="{{ order.id }}">Заказ #{{ order.id }} ({{ order.status }})</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="bg-green-500 text-white p-2 rounded-lg ml-4">Добавить к заказу</button>
-                {% else %}
-                    <p class="text-red-500">Нет активных заказов. Сначала <a href="/add_order" class="text-blue-500">создайте заказ</a>.</p>
-                {% endif %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for product in products %}
+                <div class="product-card bg-white rounded-xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="font-semibold text-lg">{{ product.name }}</h3>
+                            <p class="text-gray-500 text-sm">{{ product.category }}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{{ url_for('edit_product', product_id=product.id) }}"
+                               class="text-purple-500 hover:text-purple-700 p-2 rounded-full hover:bg-purple-50">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" class="inline">
+                                <button type="submit" onclick="return confirm('Удалить товар?')"
+                                        class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-info-circle mr-3 w-5 text-center"></i>
+                            <span class="truncate">{{ product.description or 'Нет описания' }}</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-tag mr-3 w-5 text-center"></i>
+                            <span>{{ product.price }} ₽</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-boxes mr-3 w-5 text-center"></i>
+                            <span>{{ product.stock }} шт. в наличии</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">ID: {{ product.id }}</span>
+                            <div class="flex items-center">
+                                <label class="text-sm text-gray-600 mr-2">Кол-во:</label>
+                                <input type="number" name="quantity_{{ product.id }}" min="1" max="{{ product.stock }}"
+                                       value="1" class="w-16 px-2 py-1 border rounded">
+                                <input type="checkbox" name="product_ids" value="{{ product.id }}"
+                                       class="ml-2 h-5 w-5 text-purple-500 rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition flex items-center gap-2">
+                    <i class="fas fa-cart-plus"></i> Добавить в заказ
+                </button>
             </div>
         </form>
+        {% endif %}
     </div>
 </body>
 </html>

@@ -3,42 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Клиенты</title>
+    <title>Склады</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .warehouse-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .warehouse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold">CarParts</h1>
-        <a href="/" class="text-gray-600 hover:text-black">На главную</a>
+        <h1 class="text-xl font-semibold text-purple-600">CarParts - Склады</h1>
+        <div class="flex items-center space-x-4">
+            <a href="{{ url_for('dashboard') }}" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-arrow-left mr-1"></i> Назад
+            </a>
+            <a href="/logout" class="text-gray-600 hover:text-black flex items-center">
+                <i class="fas fa-sign-out-alt mr-1"></i> Выход
+            </a>
+        </div>
     </nav>
-    <div class="max-w-4xl mx-auto mt-10">
-        <h2 class="text-3xl font-semibold mb-6">Список поставщиков</h2>
-        <a href="/add_warehouse" class="bg-black text-white p-3 rounded-lg">Добавить поставщика</a>
-        <table class="w-full mt-6 bg-white shadow-md rounded-lg">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="p-3">Имя</th>
-                    <th class="p-3">Контактная информация</th>
-                    <th class="p-3">Город</th>
-                    <th class="p-3">Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for supplier in suppliers %}
-                <tr class="border-t">
-                    <td class="p-3">{{ supplier.name }}</td>
-                    <td class="p-3">{{ supplier.contact_info }}</td>
-                    <td class="p-3">{{ supplier.city }}</td>
-                    <td class="p-3">
-                        <a href="/edit_client/{{ client.id }}" class="text-blue-500">Редактировать</a>
-                        <form action="/delete_supplier/{{ supplier.id }}" method="POST" class="inline">
-                            <button type="submit" class="text-red-500">Удалить</button>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <h2 class="text-2xl font-semibold">Управление складами</h2>
+            <div class="flex flex-col md:flex-row w-full md:w-auto gap-3">
+                <form method="GET" class="flex-1 md:w-64">
+                    <div class="relative">
+                        <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск складов..."
+                               class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </form>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('add_warehouse') }}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Добавить
+                    </a>
+                    <a href="{{ url_for('view_warehouses', sort='asc' if sort_order == 'desc' else 'desc', search=search_query) }}"
+                       class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <i class="fas fa-sort-alpha-{{ 'down' if sort_order == 'asc' else 'up' }}"></i> Сортировка
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if not warehouses %}
+        <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-warehouse text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-medium text-gray-600">Склады не найдены</h3>
+            {% if search_query %}
+            <p class="text-gray-500 mt-2">Попробуйте изменить параметры поиска</p>
+            {% else %}
+            <p class="text-gray-500 mt-2">Добавьте первый склад</p>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for warehouse in warehouses %}
+            <div class="warehouse-card bg-white rounded-xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="font-semibold text-lg">{{ warehouse.name }}</h3>
+                        <p class="text-gray-500 text-sm">ID: {{ warehouse.id }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ url_for('edit_warehouse', warehouse_id=warehouse.id) }}"
+                           class="text-purple-500 hover:text-purple-700 p-2 rounded-full hover:bg-purple-50">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ url_for('delete_warehouse', warehouse_id=warehouse.id) }}" method="POST" class="inline">
+                            <button type="submit" onclick="return confirm('Удалить склад?')"
+                                    class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-map-marker-alt mr-3 w-5 text-center"></i>
+                        <span>{{ warehouse.location }}</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-100 text-sm text-gray-500">
+                    Добавлен: {{ warehouse.created_at.strftime('%d.%m.%Y') }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>
