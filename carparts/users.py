@@ -1,5 +1,6 @@
 from models import *
 from flask import render_template, redirect, url_for, flash, request, session
+import subprocess
 
 
 def setup_user_routes(app):
@@ -31,6 +32,7 @@ def setup_user_routes(app):
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
                 session['id'] = user.id
+                notify('Вход', f"Пользователь {user.username} вошел в систему", 'Blow')
                 flash('Вход выполнен успешно!', 'success')
                 return redirect(url_for('dashboard'))
             else:
@@ -48,3 +50,13 @@ def setup_user_routes(app):
     def view_users():
         users = User.query.all()
         return render_template('view_users.html', users=users)
+
+
+def notify(title, text, sound):
+    command = '''
+    on run argv 
+        display notification (item 2 of argv) with title (item 1 of argv) sound name (item 3 of argv)
+    end run
+    '''
+
+    subprocess.call(['osascript', '-e', command, title, text, sound])

@@ -141,12 +141,14 @@ def setup_products_routes(app):
             # Проверяем, что выбраны товары
             if not product_ids:
                 flash("Не выбрано ни одного товара", "danger")
-                return redirect(url_for('_view_products'))
+                return redirect(url_for('view_products'))
 
             order = Order.query.get(order_id)
             if not order:
                 flash("Заказ не найден", "danger")
                 return redirect(url_for('view_products'))
+
+            added_products = False
 
             for product_id in product_ids:
                 quantity = int(request.form.get(f'quantity_{product_id}', 1))
@@ -158,6 +160,11 @@ def setup_products_routes(app):
 
                 if quantity <= 0:
                     flash(f"Некорректное количество для товара {product.name}", "danger")
+                    continue
+
+                # Проверяем наличие товара на складе
+                if product.stock < quantity:
+                    flash(f"Недостаточно товара {product.name} на складе (доступно: {product.stock})", "danger")
                     continue
 
                 # Проверяем, есть ли уже такой товар в заказе
@@ -177,14 +184,19 @@ def setup_products_routes(app):
                     )
                     db.session.add(new_item)
 
-            # Обновляем общую сумму заказа
-            order.total_price = sum(
-                item.quantity * item.price
-                for item in order.order_items
-            )
+                added_products = True
 
-            db.session.commit()
-            flash("Товары успешно добавлены в заказ", "success")
+            if added_products:
+                # Обновляем общую сумму заказа
+                order.total_price = sum(
+                    item.quantity * item.price
+                    for item in order.order_items
+                )
+                db.session.commit()
+                flash("Товары успешно добавлены в заказ", "success")
+            else:
+                flash("Не удалось добавить ни одного товара в заказ", "warning")
+
         except Exception as e:
             db.session.rollback()
             flash(f"Ошибка при добавлении товаров в заказ: {str(e)}", "danger")

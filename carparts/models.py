@@ -83,10 +83,16 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.String(50), nullable=False, default='Pending')
+    status = db.Column(db.String(50), nullable=False, default='Активный')
     total_price = db.Column(db.Float, nullable=False, default=0.0)
     created_at = db.Column(db.DateTime, default=datetime.now())
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
+
+    client = db.relationship('Client', backref='orders')
+    user = db.relationship('User', backref='orders')
+
+    def update_total_price(self):
+        self.total_price = sum(item.price_mult_quantity for item in self.order_items)
 
 
 class OrderItem(db.Model):

@@ -3,93 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Журнал движения товаров</title>
+    <title>Журнал операций</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold">CarParts - Журнал движения товаров</h1>
-        <div class="space-x-4">
-            <a href="/" class="text-gray-600 hover:text-black">На главную</a>
-            <a href="/view_products" class="text-blue-500 hover:text-blue-700">Товары</a>
+        <h1 class="text-xl font-semibold text-purple-600">CarParts - Журнал расхода товаров</h1>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-600">Администратор</span>
+            <a href="/logout" class="text-gray-600 hover:text-black flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                </svg>
+                Выход
+            </a>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold">Все записи инвентаризации</h2>
-                <div class="flex space-x-2">
-                    <a href="?sort=asc" class="px-3 py-1 rounded {{ 'bg-blue-500 text-white' if sort_order == 'asc' else 'bg-gray-200' }}">
-                        По возрастанию
-                    </a>
-                    <a href="?sort=desc" class="px-3 py-1 rounded {{ 'bg-blue-500 text-white' if sort_order == 'desc' else 'bg-gray-200' }}">
-                        По убыванию
-                    </a>
-                </div>
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold">Журнал операций</h2>
+            <div class="flex items-center space-x-4">
+                <a href="?sort=asc" class="text-gray-600 hover:text-purple-600 {% if sort_order == 'asc' %}text-purple-600 font-medium{% endif %}">
+                    Старые сначала
+                </a>
+                <a href="?sort=desc" class="text-gray-600 hover:text-purple-600 {% if sort_order == 'desc' %}text-purple-600 font-medium{% endif %}">
+                    Новые сначала
+                </a>
             </div>
+        </div>
 
-            {% if logs %}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Дата</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Товар</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Склад</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Секция</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип операции</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Количество</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Дата</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Товар</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Склад</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Секция</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип операции</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Количество</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for log in logs %}
-                        <tr class="hover:bg-gray-50">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ log.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ log.product.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ log.warehouse.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ log.section.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ log.created_at.strftime('%d.%m.%Y %H:%M') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ log.product.name if log.product else 'Товар удален' }}
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    ID: {{ log.product_id }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    {{ log.warehouse.name if log.warehouse else 'Склад удален' }}
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    {{ log.warehouse.location if log.warehouse else '' }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ log.section.name if log.section else 'Секция удалена' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    {{ 'bg-green-100 text-green-800' if log.change_type == 'in' else 'bg-red-100 text-red-800' }}">
-                                    {{ 'Поступление' if log.change_type == 'in' else 'Списание' }}
+                                    {% if log.change_type == 'Приход' %}bg-green-100 text-green-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ log.change_type }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ log.quantity }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ log.description or '-' }}
-                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ log.quantity }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ log.description }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% else %}
-            <div class="text-center py-8 text-gray-500">
-                Нет записей в журнале
-            </div>
-            {% endif %}
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ url_for('dashboard') }}" class="text-purple-600 hover:text-purple-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Назад к панели управления
+            </a>
         </div>
     </div>
 </body>

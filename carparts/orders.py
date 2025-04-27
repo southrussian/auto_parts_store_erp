@@ -26,14 +26,13 @@ def setup_orders_routes(app):
         if request.method == 'POST':
             client_id = request.form['client_id']
             user_id = request.form['user_id']
-            status = request.form.get('status', 'Pending')
-            total_price = request.form['total_price']
+            status = request.form.get('status', 'Активный')
 
             order = Order(
                 client_id=client_id,
                 user_id=user_id,
                 status=status,
-                total_price=total_price,
+                total_price=0.0,  # Начальная сумма 0
                 created_at=datetime.now()
             )
 
@@ -59,13 +58,13 @@ def setup_orders_routes(app):
         if request.method == 'POST':
             order.client_id = request.form['client_id']
             order.user_id = request.form['user_id']
-            new_status = request.form.get('status', 'Pending')
+            new_status = request.form.get('status', 'Активный')
             order.status = new_status
             order.total_price = request.form['total_price']
 
             try:
                 # Если статус изменился на Paid/Completed
-                if new_status in ['Paid', 'Completed'] and old_status not in ['Paid', 'Completed']:
+                if new_status in ['Оплачен', 'Завершен'] and old_status not in ['Оплачен', 'Завершен']:
                     for item in order.order_items:
                         product = Product.query.get(item.product_id)
 
@@ -83,7 +82,7 @@ def setup_orders_routes(app):
                             product_id=product.id,
                             warehouse_id=product.section.warehouse_id,
                             section_id=product.warehouse_section_id,
-                            change_type='out',
+                            change_type='Расход',
                             quantity=item.quantity,
                             description=f"Списание по заказу #{order.id} ({new_status})",
                             created_at=datetime.now()
@@ -97,7 +96,7 @@ def setup_orders_routes(app):
             except Exception as e:
                 db.session.rollback()
                 flash(f"Ошибка: {str(e)}", "danger")
-                return redirect(url_for('_edit_order', order_id=order_id))
+                return redirect(url_for('edit_order', order_id=order_id))
 
         # Для GET запроса
         clients = Client.query.all()
@@ -107,7 +106,7 @@ def setup_orders_routes(app):
             order=order,
             clients=clients,
             users=users,
-            statuses=['Pending', 'Paid', 'Completed']
+            statuses=['Активный', 'Оплачен', 'Завершен']
         )
 
     @app.route('/delete_order/<int:order_id>', methods=['POST'])
