@@ -34,7 +34,7 @@ def dashboard():
     if 'id' not in session:
         flash('Пожалуйста, войдите для доступа к этой странице.', 'warning')
         return redirect(url_for('login'))
-    app.logger.info(f"Доступ к панели управления пользователем ID: {session['id']}")
+    app.logger.info(f"Доступ к панели управления пользователем ID: {session['id']}  ")
 
     clients_count = Client.query.count()
     products_count = Product.query.count()
@@ -51,4 +51,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=6006)
+    app.run(debug=True, port=6007)

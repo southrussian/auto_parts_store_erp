@@ -77,6 +77,23 @@
                     </div>
                 </div>
 
+                <!-- В view_products.html добавим перед grid с товарами -->
+                <div class="bg-white p-4 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-medium mb-3">Фильтры:</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="{{ url_for('view_products') }}"
+                           class="px-4 py-2 rounded-lg {% if not request.args.get('category') %}bg-purple-500 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">
+                            Все категории
+                        </a>
+                        {% for cat in ['Двигатель', 'Трансмиссия', 'Подвеска', 'Тормоза', 'Электрика', 'Кузов', 'Салон', 'Масла и жидкости', 'Фильтры', 'Другое'] %}
+                        <a href="{{ url_for('view_products', category=cat) }}"
+                           class="px-4 py-2 rounded-lg {% if request.args.get('category') == cat %}bg-purple-500 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">
+                            {{ cat }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {% for product in products %}
                     <div class="product-card bg-white rounded-xl p-4 border">

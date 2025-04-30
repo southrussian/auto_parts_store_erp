@@ -11,12 +11,19 @@ def setup_products_routes(app):
             return redirect(url_for('login'))
 
         sort_order = request.args.get('sort', 'asc')
-        if sort_order == 'asc':
-            products = Product.query.order_by(Product.name.asc()).all()
-        else:
-            products = Product.query.order_by(Product.name.desc()).all()
+        category = request.args.get('category')
 
-        # Получаем активные заказы (например, со статусом "Pending")
+        query = Product.query
+
+        if category:
+            query = query.filter(Product.category == category)
+
+        if sort_order == 'asc':
+            products = query.order_by(Product.name.asc()).all()
+        else:
+            products = query.order_by(Product.name.desc()).all()
+
+            # Получаем активные заказы (например, со статусом "Pending")
         active_orders = Order.query.filter(
             Order.status.in_(['Активный'])
         ).all()
