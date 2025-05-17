@@ -32,7 +32,6 @@ def setup_user_routes(app):
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
                 session['id'] = user.id
-                notify('Вход', f"Пользователь {user.username} вошел в систему", 'Blow')
                 flash('Вход выполнен успешно!', 'success')
                 return redirect(url_for('dashboard'))
             else:
