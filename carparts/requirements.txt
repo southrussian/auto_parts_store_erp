@@ -1,0 +1,10 @@
+flask
+python-dotenv
+gigachat
+flask_migrate
+sqlalchemy
+logging
+werkzeug
+sentence_transformers
+flask_sqlalchemy
+virtualenv
